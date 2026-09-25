@@ -1,0 +1,827 @@
+{
+  "generated_at": "2026-09-22T12:16:39.640842+00:00",
+  "total_relevant_items": 89,
+  "matrix_1_failure_stage_x_photo_type": {
+    "row_label": "failure_stage",
+    "col_label": "photo_type",
+    "rows": [
+      "(not_stated)",
+      "could_not_formulate_query",
+      "could_not_recognize_correct_result",
+      "not_applicable",
+      "query_returned_nothing",
+      "query_returned_too_much"
+    ],
+    "columns": [
+      "(not_stated)",
+      "document_receipt",
+      "event",
+      "other",
+      "person",
+      "screenshot",
+      "travel"
+    ],
+    "grid": {
+      "(not_stated)": {
+        "(not_stated)": 2,
+        "document_receipt": 0,
+        "event": 0,
+        "other": 0,
+        "person": 0,
+        "screenshot": 0,
+        "travel": 0
+      },
+      "could_not_formulate_query": {
+        "(not_stated)": 8,
+        "document_receipt": 0,
+        "event": 0,
+        "other": 8,
+        "person": 0,
+        "screenshot": 0,
+        "travel": 1
+      },
+      "could_not_recognize_correct_result": {
+        "(not_stated)": 3,
+        "document_receipt": 0,
+        "event": 0,
+        "other": 1,
+        "person": 7,
+        "screenshot": 0,
+        "travel": 0
+      },
+      "not_applicable": {
+        "(not_stated)": 8,
+        "document_receipt": 0,
+        "event": 0,
+        "other": 0,
+        "person": 0,
+        "screenshot": 0,
+        "travel": 0
+      },
+      "query_returned_nothing": {
+        "(not_stated)": 16,
+        "document_receipt": 2,
+        "event": 2,
+        "other": 16,
+        "person": 4,
+        "screenshot": 4,
+        "travel": 3
+      },
+      "query_returned_too_much": {
+        "(not_stated)": 1,
+        "document_receipt": 0,
+        "event": 0,
+        "other": 2,
+        "person": 1,
+        "screenshot": 0,
+        "travel": 0
+      }
+    },
+    "row_totals": {
+      "(not_stated)": 2,
+      "could_not_formulate_query": 17,
+      "could_not_recognize_correct_result": 11,
+      "not_applicable": 8,
+      "query_returned_nothing": 47,
+      "query_returned_too_much": 4
+    },
+    "col_totals": {
+      "(not_stated)": 38,
+      "document_receipt": 2,
+      "event": 2,
+      "other": 27,
+      "person": 12,
+      "screenshot": 4,
+      "travel": 4
+    },
+    "total_associations": 89,
+    "ranked_cells": [
+      {
+        "row": "query_returned_nothing",
+        "col": "(not_stated)",
+        "count": 16
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "other",
+        "count": 16
+      },
+      {
+        "row": "could_not_formulate_query",
+        "col": "(not_stated)",
+        "count": 8
+      },
+      {
+        "row": "could_not_formulate_query",
+        "col": "other",
+        "count": 8
+      },
+      {
+        "row": "not_applicable",
+        "col": "(not_stated)",
+        "count": 8
+      },
+      {
+        "row": "could_not_recognize_correct_result",
+        "col": "person",
+        "count": 7
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "screenshot",
+        "count": 4
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "person",
+        "count": 4
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "travel",
+        "count": 3
+      },
+      {
+        "row": "could_not_recognize_correct_result",
+        "col": "(not_stated)",
+        "count": 3
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "event",
+        "count": 2
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "document_receipt",
+        "count": 2
+      },
+      {
+        "row": "query_returned_too_much",
+        "col": "other",
+        "count": 2
+      },
+      {
+        "row": "(not_stated)",
+        "col": "(not_stated)",
+        "count": 2
+      },
+      {
+        "row": "could_not_formulate_query",
+        "col": "travel",
+        "count": 1
+      },
+      {
+        "row": "could_not_recognize_correct_result",
+        "col": "other",
+        "count": 1
+      },
+      {
+        "row": "query_returned_too_much",
+        "col": "(not_stated)",
+        "count": 1
+      },
+      {
+        "row": "query_returned_too_much",
+        "col": "person",
+        "count": 1
+      }
+    ]
+  },
+  "matrix_2_memory_cues_missing_x_photo_type": {
+    "row_label": "memory_cues_missing",
+    "col_label": "photo_type",
+    "rows": [
+      "album",
+      "device_or_year",
+      "exact_date",
+      "location_name",
+      "none_mentioned",
+      "search_terms"
+    ],
+    "columns": [
+      "(not_stated)",
+      "document_receipt",
+      "event",
+      "other",
+      "person",
+      "screenshot",
+      "travel"
+    ],
+    "grid": {
+      "album": {
+        "(not_stated)": 3,
+        "document_receipt": 1,
+        "event": 2,
+        "other": 16,
+        "person": 5,
+        "screenshot": 2,
+        "travel": 3
+      },
+      "device_or_year": {
+        "(not_stated)": 1,
+        "document_receipt": 1,
+        "event": 1,
+        "other": 8,
+        "person": 0,
+        "screenshot": 2,
+        "travel": 0
+      },
+      "exact_date": {
+        "(not_stated)": 6,
+        "document_receipt": 2,
+        "event": 2,
+        "other": 14,
+        "person": 3,
+        "screenshot": 3,
+        "travel": 0
+      },
+      "location_name": {
+        "(not_stated)": 1,
+        "document_receipt": 1,
+        "event": 2,
+        "other": 11,
+        "person": 0,
+        "screenshot": 1,
+        "travel": 0
+      },
+      "none_mentioned": {
+        "(not_stated)": 28,
+        "document_receipt": 0,
+        "event": 0,
+        "other": 9,
+        "person": 4,
+        "screenshot": 1,
+        "travel": 0
+      },
+      "search_terms": {
+        "(not_stated)": 5,
+        "document_receipt": 2,
+        "event": 1,
+        "other": 13,
+        "person": 5,
+        "screenshot": 3,
+        "travel": 3
+      }
+    },
+    "row_totals": {
+      "album": 32,
+      "device_or_year": 13,
+      "exact_date": 30,
+      "location_name": 16,
+      "none_mentioned": 42,
+      "search_terms": 32
+    },
+    "col_totals": {
+      "(not_stated)": 44,
+      "document_receipt": 7,
+      "event": 8,
+      "other": 71,
+      "person": 17,
+      "screenshot": 12,
+      "travel": 6
+    },
+    "total_associations": 165,
+    "ranked_cells": [
+      {
+        "row": "none_mentioned",
+        "col": "(not_stated)",
+        "count": 28
+      },
+      {
+        "row": "album",
+        "col": "other",
+        "count": 16
+      },
+      {
+        "row": "exact_date",
+        "col": "other",
+        "count": 14
+      },
+      {
+        "row": "search_terms",
+        "col": "other",
+        "count": 13
+      },
+      {
+        "row": "location_name",
+        "col": "other",
+        "count": 11
+      },
+      {
+        "row": "none_mentioned",
+        "col": "other",
+        "count": 9
+      },
+      {
+        "row": "device_or_year",
+        "col": "other",
+        "count": 8
+      },
+      {
+        "row": "exact_date",
+        "col": "(not_stated)",
+        "count": 6
+      },
+      {
+        "row": "search_terms",
+        "col": "(not_stated)",
+        "count": 5
+      },
+      {
+        "row": "album",
+        "col": "person",
+        "count": 5
+      },
+      {
+        "row": "search_terms",
+        "col": "person",
+        "count": 5
+      },
+      {
+        "row": "none_mentioned",
+        "col": "person",
+        "count": 4
+      },
+      {
+        "row": "album",
+        "col": "(not_stated)",
+        "count": 3
+      },
+      {
+        "row": "album",
+        "col": "travel",
+        "count": 3
+      },
+      {
+        "row": "exact_date",
+        "col": "screenshot",
+        "count": 3
+      },
+      {
+        "row": "search_terms",
+        "col": "screenshot",
+        "count": 3
+      },
+      {
+        "row": "search_terms",
+        "col": "travel",
+        "count": 3
+      },
+      {
+        "row": "exact_date",
+        "col": "person",
+        "count": 3
+      },
+      {
+        "row": "album",
+        "col": "event",
+        "count": 2
+      },
+      {
+        "row": "exact_date",
+        "col": "event",
+        "count": 2
+      },
+      {
+        "row": "location_name",
+        "col": "event",
+        "count": 2
+      },
+      {
+        "row": "exact_date",
+        "col": "document_receipt",
+        "count": 2
+      },
+      {
+        "row": "search_terms",
+        "col": "document_receipt",
+        "count": 2
+      },
+      {
+        "row": "album",
+        "col": "screenshot",
+        "count": 2
+      },
+      {
+        "row": "device_or_year",
+        "col": "screenshot",
+        "count": 2
+      },
+      {
+        "row": "device_or_year",
+        "col": "(not_stated)",
+        "count": 1
+      },
+      {
+        "row": "location_name",
+        "col": "(not_stated)",
+        "count": 1
+      },
+      {
+        "row": "none_mentioned",
+        "col": "screenshot",
+        "count": 1
+      },
+      {
+        "row": "device_or_year",
+        "col": "event",
+        "count": 1
+      },
+      {
+        "row": "location_name",
+        "col": "screenshot",
+        "count": 1
+      },
+      {
+        "row": "search_terms",
+        "col": "event",
+        "count": 1
+      },
+      {
+        "row": "album",
+        "col": "document_receipt",
+        "count": 1
+      },
+      {
+        "row": "device_or_year",
+        "col": "document_receipt",
+        "count": 1
+      },
+      {
+        "row": "location_name",
+        "col": "document_receipt",
+        "count": 1
+      }
+    ]
+  },
+  "matrix_3_failure_stage_x_workaround": {
+    "row_label": "failure_stage",
+    "col_label": "workaround",
+    "rows": [
+      "(not_stated)",
+      "could_not_formulate_query",
+      "could_not_recognize_correct_result",
+      "not_applicable",
+      "query_returned_nothing",
+      "query_returned_too_much"
+    ],
+    "columns": [
+      "checked_other_app",
+      "manual_scrolling",
+      "none"
+    ],
+    "grid": {
+      "(not_stated)": {
+        "checked_other_app": 1,
+        "manual_scrolling": 0,
+        "none": 1
+      },
+      "could_not_formulate_query": {
+        "checked_other_app": 0,
+        "manual_scrolling": 2,
+        "none": 15
+      },
+      "could_not_recognize_correct_result": {
+        "checked_other_app": 0,
+        "manual_scrolling": 1,
+        "none": 10
+      },
+      "not_applicable": {
+        "checked_other_app": 0,
+        "manual_scrolling": 0,
+        "none": 8
+      },
+      "query_returned_nothing": {
+        "checked_other_app": 2,
+        "manual_scrolling": 3,
+        "none": 42
+      },
+      "query_returned_too_much": {
+        "checked_other_app": 0,
+        "manual_scrolling": 1,
+        "none": 3
+      }
+    },
+    "row_totals": {
+      "(not_stated)": 2,
+      "could_not_formulate_query": 17,
+      "could_not_recognize_correct_result": 11,
+      "not_applicable": 8,
+      "query_returned_nothing": 47,
+      "query_returned_too_much": 4
+    },
+    "col_totals": {
+      "checked_other_app": 3,
+      "manual_scrolling": 7,
+      "none": 79
+    },
+    "total_associations": 89,
+    "ranked_cells": [
+      {
+        "row": "query_returned_nothing",
+        "col": "none",
+        "count": 42
+      },
+      {
+        "row": "could_not_formulate_query",
+        "col": "none",
+        "count": 15
+      },
+      {
+        "row": "could_not_recognize_correct_result",
+        "col": "none",
+        "count": 10
+      },
+      {
+        "row": "not_applicable",
+        "col": "none",
+        "count": 8
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "manual_scrolling",
+        "count": 3
+      },
+      {
+        "row": "query_returned_too_much",
+        "col": "none",
+        "count": 3
+      },
+      {
+        "row": "query_returned_nothing",
+        "col": "checked_other_app",
+        "count": 2
+      },
+      {
+        "row": "could_not_formulate_query",
+        "col": "manual_scrolling",
+        "count": 2
+      },
+      {
+        "row": "could_not_recognize_correct_result",
+        "col": "manual_scrolling",
+        "count": 1
+      },
+      {
+        "row": "query_returned_too_much",
+        "col": "manual_scrolling",
+        "count": 1
+      },
+      {
+        "row": "(not_stated)",
+        "col": "none",
+        "count": 1
+      },
+      {
+        "row": "(not_stated)",
+        "col": "checked_other_app",
+        "count": 1
+      }
+    ]
+  },
+  "matrix_4_memory_cues_retained_x_memory_cues_missing": {
+    "row_label": "memory_cues_retained",
+    "col_label": "memory_cues_missing",
+    "rows": [
+      "activity_event",
+      "none_mentioned",
+      "people_present",
+      "place",
+      "rough_time_period",
+      "visual_detail"
+    ],
+    "columns": [
+      "album",
+      "device_or_year",
+      "exact_date",
+      "location_name",
+      "none_mentioned",
+      "search_terms"
+    ],
+    "grid": {
+      "activity_event": {
+        "album": 9,
+        "device_or_year": 2,
+        "exact_date": 8,
+        "location_name": 3,
+        "none_mentioned": 0,
+        "search_terms": 9
+      },
+      "none_mentioned": {
+        "album": 2,
+        "device_or_year": 1,
+        "exact_date": 3,
+        "location_name": 1,
+        "none_mentioned": 37,
+        "search_terms": 4
+      },
+      "people_present": {
+        "album": 5,
+        "device_or_year": 0,
+        "exact_date": 3,
+        "location_name": 0,
+        "none_mentioned": 2,
+        "search_terms": 5
+      },
+      "place": {
+        "album": 4,
+        "device_or_year": 0,
+        "exact_date": 3,
+        "location_name": 1,
+        "none_mentioned": 0,
+        "search_terms": 4
+      },
+      "rough_time_period": {
+        "album": 16,
+        "device_or_year": 6,
+        "exact_date": 15,
+        "location_name": 11,
+        "none_mentioned": 2,
+        "search_terms": 13
+      },
+      "visual_detail": {
+        "album": 6,
+        "device_or_year": 4,
+        "exact_date": 4,
+        "location_name": 3,
+        "none_mentioned": 2,
+        "search_terms": 6
+      }
+    },
+    "row_totals": {
+      "activity_event": 31,
+      "none_mentioned": 48,
+      "people_present": 15,
+      "place": 12,
+      "rough_time_period": 63,
+      "visual_detail": 25
+    },
+    "col_totals": {
+      "album": 42,
+      "device_or_year": 13,
+      "exact_date": 36,
+      "location_name": 19,
+      "none_mentioned": 43,
+      "search_terms": 41
+    },
+    "total_associations": 194,
+    "ranked_cells": [
+      {
+        "row": "none_mentioned",
+        "col": "none_mentioned",
+        "count": 37
+      },
+      {
+        "row": "rough_time_period",
+        "col": "album",
+        "count": 16
+      },
+      {
+        "row": "rough_time_period",
+        "col": "exact_date",
+        "count": 15
+      },
+      {
+        "row": "rough_time_period",
+        "col": "search_terms",
+        "count": 13
+      },
+      {
+        "row": "rough_time_period",
+        "col": "location_name",
+        "count": 11
+      },
+      {
+        "row": "activity_event",
+        "col": "album",
+        "count": 9
+      },
+      {
+        "row": "activity_event",
+        "col": "search_terms",
+        "count": 9
+      },
+      {
+        "row": "activity_event",
+        "col": "exact_date",
+        "count": 8
+      },
+      {
+        "row": "rough_time_period",
+        "col": "device_or_year",
+        "count": 6
+      },
+      {
+        "row": "visual_detail",
+        "col": "album",
+        "count": 6
+      },
+      {
+        "row": "visual_detail",
+        "col": "search_terms",
+        "count": 6
+      },
+      {
+        "row": "people_present",
+        "col": "album",
+        "count": 5
+      },
+      {
+        "row": "people_present",
+        "col": "search_terms",
+        "count": 5
+      },
+      {
+        "row": "place",
+        "col": "album",
+        "count": 4
+      },
+      {
+        "row": "visual_detail",
+        "col": "device_or_year",
+        "count": 4
+      },
+      {
+        "row": "visual_detail",
+        "col": "exact_date",
+        "count": 4
+      },
+      {
+        "row": "place",
+        "col": "search_terms",
+        "count": 4
+      },
+      {
+        "row": "none_mentioned",
+        "col": "search_terms",
+        "count": 4
+      },
+      {
+        "row": "activity_event",
+        "col": "location_name",
+        "count": 3
+      },
+      {
+        "row": "visual_detail",
+        "col": "location_name",
+        "count": 3
+      },
+      {
+        "row": "place",
+        "col": "exact_date",
+        "count": 3
+      },
+      {
+        "row": "people_present",
+        "col": "exact_date",
+        "count": 3
+      },
+      {
+        "row": "none_mentioned",
+        "col": "exact_date",
+        "count": 3
+      },
+      {
+        "row": "people_present",
+        "col": "none_mentioned",
+        "count": 2
+      },
+      {
+        "row": "rough_time_period",
+        "col": "none_mentioned",
+        "count": 2
+      },
+      {
+        "row": "activity_event",
+        "col": "device_or_year",
+        "count": 2
+      },
+      {
+        "row": "visual_detail",
+        "col": "none_mentioned",
+        "count": 2
+      },
+      {
+        "row": "none_mentioned",
+        "col": "album",
+        "count": 2
+      },
+      {
+        "row": "none_mentioned",
+        "col": "location_name",
+        "count": 1
+      },
+      {
+        "row": "none_mentioned",
+        "col": "device_or_year",
+        "count": 1
+      },
+      {
+        "row": "place",
+        "col": "location_name",
+        "count": 1
+      }
+    ]
+  }
+}
