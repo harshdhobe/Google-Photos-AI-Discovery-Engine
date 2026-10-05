@@ -695,6 +695,41 @@ st.markdown(
     [data-testid="stAlert"] {
         border-radius: 8px !important;
     }
+
+    /* ── Tabs Navigation Styling ── */
+    [data-testid="stTabs"] {
+        margin-top: 18px !important;
+        margin-bottom: 24px !important;
+    }
+    [data-testid="stTabs"] [data-baseweb="tab-list"] {
+        gap: 6px !important;
+        background-color: transparent !important;
+        border-bottom: 2px solid #E8EAED !important;
+        padding-bottom: 0px !important;
+    }
+    [data-testid="stTabs"] [data-baseweb="tab"] {
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+        color: #5F6368 !important;
+        padding: 10px 18px !important;
+        border-radius: 8px 8px 0 0 !important;
+        border: none !important;
+        background: transparent !important;
+        transition: all 0.15s ease-in-out !important;
+    }
+    [data-testid="stTabs"] [data-baseweb="tab"]:hover {
+        color: #1A73E8 !important;
+        background-color: rgba(26, 115, 232, 0.06) !important;
+    }
+    [data-testid="stTabs"] [aria-selected="true"] {
+        color: #1A73E8 !important;
+        font-weight: 600 !important;
+        border-bottom: 3px solid #1A73E8 !important;
+        background-color: #FFFFFF !important;
+    }
+    [data-testid="stTabs"] [data-baseweb="tab-panel"] {
+        padding-top: 18px !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -925,456 +960,469 @@ st.markdown(
 
 
 # ===========================================================================
-# SECTION 1 — PIPELINE STATUS STRIP
+# TABS SETUP
 # ===========================================================================
-st.markdown(
-    '<div class="section-heading">Pipeline Flow &nbsp;',
-    unsafe_allow_html=True,
-)
-
-pc = pipeline_counts
-st.markdown(
-    f"""
-    <div class="pipeline-stepper">
-        <div class="step">
-            <div class="step-name">Collect</div>
-            <div class="step-count">{pc["collect"]:,}</div>
-            <div class="step-label">raw items collected</div>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-            <div class="step-name">Tag</div>
-            <div class="step-count">{pc["tag"]:,}</div>
-            <div class="step-label">items AI-tagged</div>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-            <div class="step-name">Store</div>
-            <div class="step-count">{pc["store"]:,}</div>
-            <div class="step-label">rows in SQLite DB</div>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-            <div class="step-name">Aggregate</div>
-            <div class="step-count">{pc["aggregate"]}</div>
-            <div class="step-label">cross-tab matrices</div>
-        </div>
-        <div class="step-arrow">→</div>
-        <div class="step">
-            <div class="step-name">Derive Clusters</div>
-            <div class="step-count">{pc["clusters"]}</div>
-            <div class="step-label">opportunity clusters</div>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+tab_pipeline_kpis, tab_findings, tab_ask_data, tab_explorer, tab_methodology = st.tabs([
+    "📊 Pipeline & KPIs",
+    "💡 Research Findings",
+    "💬 Ask the Data (RAG)",
+    "🔍 Data Explorer",
+    "📑 Methodology",
+])
 
 
 # ===========================================================================
-# SECTION 2 — KPI BANNER (data-driven)
+# TAB 1: PIPELINE STATUS & RESEARCH KPIS
 # ===========================================================================
-st.markdown(
-    '<div class="section-heading">Research KPIs</div>',
-    unsafe_allow_html=True,
-)
-
-# Secondary stats row (placed first)
-s1, s2, s3 = st.columns(3)
-secondary_kpis = [
-    (s1, "Total corpus analyzed",  corpus_total_str, "Across 6 public sources"),
-    (s2, "Verified relevant cases", str(relevant_total), "Vague retrieval struggles"),
-    (s3, "Search abandonment rate", abandonment_pct, abandonment_subtext),
-]
-
-for col, label, value, subtext in secondary_kpis:
-    with col:
-        st.markdown(
-            f"""
-            <div class="stat-card">
-                <div class="stat-label">{label}</div>
-                <div class="stat-value">{value}</div>
-                <div class="stat-sub">{subtext}</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-# Hero stat — Primary Failure Mode (placed below 3-stat row)
-st.markdown(
-    f"""
-    <div class="hero-stat-wrap" style="margin-top: 14px;">
-        <div class="hero-stat-label">Primary failure mode</div>
-        <div class="hero-stat">{primary_failure_pct}</div>
-        <div class="hero-stat-desc">Over half of all vague-memory searches return zero results — the search engine finds nothing, not the wrong thing. ({primary_failure_subtext})</div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-# ===========================================================================
-# SECTION 3+4 — RESEARCH QUESTION CARDS WITH CONFIDENCE BADGES
-# ===========================================================================
-st.markdown(
-    '<div class="section-heading">Research findings</div>',
-    unsafe_allow_html=True,
-)
-st.caption(
-    "Clusters derived algorithmically from ranked cross-tabulation cell counts — "
-    "not pre-defined narratives. Each card links a question-framed finding to its "
-    "supporting evidence and confidence level."
-)
-
-CLUSTER_MERGED_FINDINGS: dict[str, str] = {
-    "cluster_1_query_returned_nothing": (
-        "47 / 89 relevant items (52.8% of retrieval failures) — Matrix 1, top-ranked cell."
-    ),
-    "cluster_2_rough_time_vs_exact_date_album": (
-        "63 pairwise associations with rough temporal cues (16 missing album, 15 missing exact date) — Matrix 4, ranks #2 & #3."
-    ),
-    "cluster_3_query_formulation_barrier": (
-        "17 / 89 relevant items (19.1% of retrieval failures) — Matrix 1, cell rank #3."
-    ),
-    "cluster_4_person_face_grouping_misidentification": (
-        "7 / 12 person-focused searches fail at recognition (58.3%) — Matrix 1, cell rank #6."
-    ),
-    "cluster_5_search_abandonment_and_manual_scrolling": (
-        "79 / 89 users (88.8%) had no workaround; 7 resorted to manual timeline scrolling — Matrix 3."
-    ),
-}
-
-for idx, cl in enumerate(clusters, 1):
-    cluster_id = cl.get("cluster_id", "")
-    question = CLUSTER_QUESTIONS.get(cluster_id, cl.get("title", "Unknown cluster"))
-    frequency = cl.get("frequency", 0)
-    evidence_badge = get_evidence_badge(frequency)
-    finding_text = CLUSTER_MERGED_FINDINGS.get(
-        cluster_id, cl.get("what_the_data_shows", cl.get("primary_metric", ""))
+with tab_pipeline_kpis:
+    st.markdown(
+        '<div class="section-heading">Pipeline Flow &nbsp;',
+        unsafe_allow_html=True,
     )
-    behavioral_gap = cl.get("behavioral_gap", "")
-    quotes: list[dict] = cl.get("supporting_quotes", [])
 
+    pc = pipeline_counts
     st.markdown(
         f"""
-        <div class="cluster-card">
-            <div class="cluster-number">Cluster {idx}</div>
-            <div class="cluster-question">{question}</div>
-            <div class="badge-row">
-                {evidence_badge}
-                <span class="badge-cluster-n">{frequency} items</span>
+        <div class="pipeline-stepper">
+            <div class="step">
+                <div class="step-name">Collect</div>
+                <div class="step-count">{pc["collect"]:,}</div>
+                <div class="step-label">raw items collected</div>
             </div>
-            <div class="cluster-finding">{finding_text}</div>
+            <div class="step-arrow">→</div>
+            <div class="step">
+                <div class="step-name">Tag</div>
+                <div class="step-count">{pc["tag"]:,}</div>
+                <div class="step-label">items AI-tagged</div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step">
+                <div class="step-name">Store</div>
+                <div class="step-count">{pc["store"]:,}</div>
+                <div class="step-label">rows in SQLite DB</div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step">
+                <div class="step-name">Aggregate</div>
+                <div class="step-count">{pc["aggregate"]}</div>
+                <div class="step-label">cross-tab matrices</div>
+            </div>
+            <div class="step-arrow">→</div>
+            <div class="step">
+                <div class="step-name">Derive Clusters</div>
+                <div class="step-count">{pc["clusters"]}</div>
+                <div class="step-label">opportunity clusters</div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    with st.expander("Show supporting evidence", expanded=False):
-        if behavioral_gap:
-            st.markdown(
-                f"**Behavioral Gap:** {behavioral_gap}",
-            )
-            st.markdown("---")
-
-        st.markdown("**Representative Quotes:**")
-        for q in quotes[:3]:
-            source_label = q.get("source", "unknown").replace("_", " ").title()
-            item_id = q.get("item_id", "")
-            quote_text = q.get("quote", "")
-            st.markdown(
-                f"""
-                <div class="quote-card">
-                    "{quote_text}"
-                    <div class="quote-meta">
-                        <strong>{source_label}</strong> · ID: <code>{item_id}</code>
-                    </div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-        extra = frequency - 3
-        if extra > 0:
-            st.caption(
-                f"*+{extra} more items in this cluster — explore them in the Full Data Explorer below.*"
-            )
-
-
-# ===========================================================================
-# SECTION 5 — ASK THE DATA
-# ===========================================================================
-st.markdown(
-    '<div class="section-heading">Ask the data</div>',
-    unsafe_allow_html=True,
-)
-st.caption(
-    "Retrieval-augmented synthesis over the 89 verified relevant items in the tagged SQLite corpus. "
-    "All answers are cited with exact item IDs. Powered by **Groq llama-3.3-70b-versatile** (free tier)."
-)
-
-# Preset question buttons
-PRESET_QUESTIONS = [
-    "Why do document and receipt photo searches fail differently from travel photo searches?",
-    "What workarounds do users attempt when Google Photos search fails?",
-    "Which sources report the most search failures and what patterns distinguish them?",
-    "How does rough temporal memory (e.g. 'about 3 years ago') conflict with the way Google Photos organizes photos?",
-    "Why does face and person search fail for users looking for family members?",
-]
-
-st.markdown("**One-click questions:**")
-
-# Preset question buttons — rendered in 2-column rows with multi-line wrapping
-for row_start in range(0, len(PRESET_QUESTIONS), 2):
-    pair = PRESET_QUESTIONS[row_start : row_start + 2]
-    cols = st.columns(2)
-    for c_i, q in enumerate(pair):
-        btn_idx = row_start + c_i
-        if cols[c_i].button(q, key=f"preset_btn_{btn_idx}", use_container_width=True):
-            st.session_state["qa_text_input"] = q
-
-st.markdown(
-    "<div style='font-size:0.92rem;color:#5F6368;margin:14px 0 6px;font-weight:600;'>Or ask your own question:</div>",
-    unsafe_allow_html=True,
-)
-
-user_query_input = st.text_input(
-    label="Custom question",
-    label_visibility="collapsed",
-    placeholder="e.g. Why do users who remember a person's face still fail to find the photo?",
-    key="qa_text_input",
-)
-
-run_qa = st.button("Generate Cited Research Answer", type="primary")
-
-if run_qa and user_query_input.strip():
-    with st.spinner("Retrieving relevant feedback and synthesizing cited answer via Groq…"):
-        response = ask_grounded_qa(
-            query=user_query_input.strip(),
-            items=db_items,
-            api_key=effective_api_key,
-            top_k=6,
-        )
-
     st.markdown(
-        '<div class="answer-box">',
+        '<div class="section-heading" style="margin-top: 24px;">Research KPIs</div>',
         unsafe_allow_html=True,
     )
-    st.markdown(f"**Question:** _{response['query']}_")
-    st.markdown("---")
-    st.markdown(response["answer"])
-    st.markdown("</div>", unsafe_allow_html=True)
 
-    evidence = response.get("evidence", [])
-    with st.expander(f"🔍 Evidence used — {len(evidence)} corpus items retrieved", expanded=False):
-        for ev in evidence:
-            st.markdown(
-                f"**{ev['citation_label']}** — *{ev['source']}*"
-                f"{'  ⭐ ' + str(ev['rating']) + '/5' if ev.get('rating') else ''}"
-            )
-            cols = st.columns([1, 1, 1])
-            cols[0].caption(f"Photo type: `{ev['photo_type']}`")
-            cols[1].caption(f"Failure: `{ev['failure_stage']}`")
-            cols[2].caption(f"Workaround: `{ev['workaround']}`")
-            st.markdown(f"> *\"{ev['quote']}\"*")
-            if ev.get("raw_text"):
-                st.caption(f"Raw text: {ev['raw_text'][:200]}…")
-            st.markdown("---")
+    # Secondary stats row (placed first)
+    s1, s2, s3 = st.columns(3)
+    secondary_kpis = [
+        (s1, "Total corpus analyzed",  corpus_total_str, "Across 6 public sources"),
+        (s2, "Verified relevant cases", str(relevant_total), "Vague retrieval struggles"),
+        (s3, "Search abandonment rate", abandonment_pct, abandonment_subtext),
+    ]
 
-elif run_qa and not user_query_input.strip():
-    st.warning("Please enter a question before generating an answer.")
-
-
-# ===========================================================================
-# SECTION 6 — FULL DATA EXPLORER (collapsed by default)
-# ===========================================================================
-
-with st.expander("🔍 Explore the Full Dataset", expanded=True):
-    st.markdown(
-        "Browse and filter the complete tagged corpus — including non-relevant items — and explore "
-        "the 4 cross-tabulation matrices."
-    )
-
-    # ── Corpus Browser ──────────────────────────────────────────────────────
-    st.subheader("Raw Reviews Analyser")
-
-    # Filters — fresh query on change (not cached)
-    all_rows = load_all_db_rows()
-    f1, f2, f3 = st.columns([1, 2, 1])
-    with f1:
-        all_sources_raw = sorted({r["source"] for r in all_rows if r.get("source")})
-        source_sel = st.selectbox("Source", ["All"] + all_sources_raw, key="explorer_source")
-    with f2:
-        text_search = st.text_input("Text search (searches raw_text + quote)", key="explorer_text", placeholder="e.g. receipt, face, scroll…")
-    with f3:
-        row_limit = st.selectbox("Show rows", [25, 50, 100, 250, 500], index=1, key="explorer_limit")
-
-    # Apply filters (no cache — triggered by widget state change)
-    filtered = all_rows
-    if source_sel != "All":
-        filtered = [r for r in filtered if r.get("source") == source_sel]
-    if text_search.strip():
-        q_lower = text_search.strip().lower()
-        filtered = [
-            r for r in filtered
-            if q_lower in (r.get("raw_text") or "").lower()
-            or q_lower in (r.get("representative_quote") or "").lower()
-        ]
-
-    st.caption(f"Showing **{min(len(filtered), row_limit)}** of **{len(filtered)}** matching rows (total in DB: {len(all_rows)})")
-
-    if filtered:
-        display_rows = []
-        for r in filtered[:row_limit]:
-            display_rows.append({
-                "source": r.get("source", ""),
-                "rating": r.get("rating", ""),
-                "date": (r.get("date") or "")[:10],
-                "text": (r.get("raw_text") or "")[:120] + ("…" if len(r.get("raw_text") or "") > 120 else ""),
-                "is_relevant": "✅" if r.get("is_relevant") else "—",
-                "photo_type": r.get("photo_type") or "",
-                "failure_stage": r.get("failure_stage") or "",
-                "workaround": r.get("workaround") or "",
-                "quote": (r.get("representative_quote") or "")[:80],
-            })
-        df_explorer = pd.DataFrame(display_rows)
-        st.dataframe(df_explorer, use_container_width=True, height=400)
-    else:
-        st.info("No rows match the current filters.")
-
-    # ── Cross-Tab Matrices ───────────────────────────────────────────────────
-    st.markdown("---")
-    st.subheader("Cross-Tabulation Matrices")
-    st.caption(
-        "4 relational matrices computed across all 89 verified relevant items. "
-        "Select a matrix to view the heatmap and drill down to authentic user quotes."
-    )
-
-    MATRIX_OPTIONS = {
-        "Matrix 1: Failure Stage × Photo Type": "matrix_1_failure_stage_x_photo_type",
-        "Matrix 2: Memory Cues Missing × Photo Type": "matrix_2_memory_cues_missing_x_photo_type",
-        "Matrix 3: Failure Stage × Workaround": "matrix_3_failure_stage_x_workaround",
-        "Matrix 4: Memory Cues Retained × Memory Cues Missing": "matrix_4_memory_cues_retained_x_memory_cues_missing",
-    }
-
-    matrix_choice = st.radio(
-        "Select Matrix:",
-        list(MATRIX_OPTIONS.keys()),
-        horizontal=True,
-        key="matrix_radio",
-    )
-    selected_key = MATRIX_OPTIONS[matrix_choice]
-    m_data = crosstabs.get(selected_key, {})
-
-    if m_data and "grid" in m_data:
-        df_grid = pd.DataFrame.from_dict(m_data["grid"], orient="index")
-        df_grid["TOTAL"] = df_grid.sum(axis=1)
-        totals_row = df_grid.sum(axis=0)
-        totals_row.name = "TOTAL"
-        df_display = pd.concat([df_grid, totals_row.to_frame().T])
-
-        non_total_cols = [c for c in df_grid.columns if c != "TOTAL"]
-        try:
-            styled = df_display.style.background_gradient(
-                cmap="Blues",
-                subset=pd.IndexSlice[df_grid.index, non_total_cols],
-            )
-            st.dataframe(styled, use_container_width=True, height=320)
-        except Exception:
-            st.dataframe(df_display, use_container_width=True, height=320)
-
-        # Quote drill-down
-        st.markdown("**Verbatim Quote Drill-Down**")
-        dc1, dc2, dc3 = st.columns(3)
-        with dc1:
-            ds_list = ["All"] + sorted({it["source"] for it in db_items})
-            ds_src = st.selectbox("Filter by Source", ds_list, key="drill_source")
-        with dc2:
-            ds_stage = st.selectbox(
-                "Filter by Failure Stage",
-                ["All"] + sorted({it["failure_stage"] for it in db_items}),
-                key="drill_stage",
-            )
-        with dc3:
-            ds_type = st.selectbox(
-                "Filter by Photo Type",
-                ["All"] + sorted({it["photo_type"] for it in db_items}),
-                key="drill_type",
-            )
-
-        drill_items = [
-            it for it in db_items
-            if (ds_src == "All" or it["source"] == ds_src)
-            and (ds_stage == "All" or it["failure_stage"] == ds_stage)
-            and (ds_type == "All" or it["photo_type"] == ds_type)
-        ]
-        st.caption(f"Showing **{min(len(drill_items), 10)}** of **{len(drill_items)}** matching quotes")
-        for it in drill_items[:10]:
-            rating_str = f" ⭐ {it['rating']}/5" if it.get("rating") else ""
-            date_str = f" · {it['date'][:10]}" if it.get("date") else ""
-            quote_text = it["quote"] if len(it["quote"]) > 10 else (it["raw_text"][:160] + "…")
+    for col, label, value, subtext in secondary_kpis:
+        with col:
             st.markdown(
                 f"""
-                <div class="quote-card">
-                    "{quote_text}"
-                    <div class="quote-meta">
-                        <strong>{it['citation_label']}</strong> ({it['source']}){rating_str}{date_str}
-                        &nbsp;|&nbsp; <code>photo_type: {it['photo_type']}</code>
-                        &nbsp;|&nbsp; <code>failure: {it['failure_stage']}</code>
-                        &nbsp;|&nbsp; <code>workaround: {it['workaround']}</code>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-label">{label}</div>
+                    <div class="stat-value">{value}</div>
+                    <div class="stat-sub">{subtext}</div>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
-        if len(drill_items) > 10:
-            st.caption(f"*Showing first 10 of {len(drill_items)} matching items.*")
-    else:
-        st.warning("No cross-tabulation data found. Please run `pipeline/aggregate.py` first.")
 
-
-# ===========================================================================
-# SECTION 7 — METHODOLOGY FOOTER
-# ===========================================================================
-source_cards_list = []
-for s in source_breakdown:
-    display_name = s.get("display_name", s.get("source", "")).replace(" Reviews", "")
-    total_coll = s.get("total_collected", 0)
-    total_rel = s.get("total_relevant", 0)
-    rel_rate = s.get("relevance_rate", "—")
-    source_cards_list.append(
-        f'<div class="source-item-card">'
-        f'<div class="source-item-name">{display_name}</div>'
-        f'<div class="source-item-counts">'
-        f'<span><strong>{total_coll:,}</strong> collected</span>'
-        f'<span><strong>{total_rel}</strong> relevant</span>'
-        f'<span class="source-item-rate">{rel_rate}</span>'
-        f'</div>'
-        f'</div>'
+    # Hero stat — Primary Failure Mode (placed below 3-stat row)
+    st.markdown(
+        f"""
+        <div class="hero-stat-wrap" style="margin-top: 14px;">
+            <div class="hero-stat-label">Primary failure mode</div>
+            <div class="hero-stat">{primary_failure_pct}</div>
+            <div class="hero-stat-desc">Over half of all vague-memory searches return zero results — the search engine finds nothing, not the wrong thing. ({primary_failure_subtext})</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
-source_cards_html = "".join(source_cards_list)
 
-tagging_model = methodology.get("tagging_model", "Groq llama-3.3-70b-versatile (free tier, JSON mode)")
-corpus_note = (
-    f"{methodology.get('corpus_size', '—'):,} total items tagged · "
-    f"{methodology.get('relevant_corpus_size', '—')} relevant ({methodology.get('relevance_percentage', '—')})"
-    if isinstance(methodology.get("corpus_size"), int)
-    else "See findings.json for full counts."
-)
 
-provenance_html = (
-    '<div class="provenance-card">'
-    '<div class="provenance-title">Corpus Breakdown &amp; Pipeline Provenance</div>'
-    '<div class="provenance-subtitle">Audited distribution of public feedback items collected across 6 primary channels.</div>'
-    f'<div class="source-grid">{source_cards_html}</div>'
-    '<div class="provenance-meta-list">'
-    f'<div class="provenance-meta-row"><strong>Analyzed Corpus</strong><span>{corpus_note}</span></div>'
-    f'<div class="provenance-meta-row"><strong>Tagging Model</strong><span>{tagging_model}</span></div>'
-    '<div class="provenance-meta-row"><strong>Q&amp;A Synthesis Model</strong><span>Groq llama-3.3-70b-versatile via OpenAI-compatible API</span></div>'
-    '<div class="provenance-meta-row"><strong>Pipeline Architecture</strong><span>Collection &rarr; AI Tagging &rarr; SQLite Storage &rarr; Aggregation &rarr; Cluster Derivation &rarr; Interface</span></div>'
-    '</div>'
+# ===========================================================================
+# TAB 3: SECTION 3+4 — RESEARCH QUESTION CARDS WITH CONFIDENCE BADGES
+# ===========================================================================
+with tab_findings:
+    st.markdown(
+        '<div class="section-heading">Research findings</div>',
+        unsafe_allow_html=True,
+    )
+    st.caption(
+        "Clusters derived algorithmically from ranked cross-tabulation cell counts — "
+        "not pre-defined narratives. Each card links a question-framed finding to its "
+        "supporting evidence and confidence level."
+    )
 
-    '</div>'
-)
+    CLUSTER_MERGED_FINDINGS: dict[str, str] = {
+        "cluster_1_query_returned_nothing": (
+            "47 / 89 relevant items (52.8% of retrieval failures) — Matrix 1, top-ranked cell."
+        ),
+        "cluster_2_rough_time_vs_exact_date_album": (
+            "63 pairwise associations with rough temporal cues (16 missing album, 15 missing exact date) — Matrix 4, ranks #2 & #3."
+        ),
+        "cluster_3_query_formulation_barrier": (
+            "17 / 89 relevant items (19.1% of retrieval failures) — Matrix 1, cell rank #3."
+        ),
+        "cluster_4_person_face_grouping_misidentification": (
+            "7 / 12 person-focused searches fail at recognition (58.3%) — Matrix 1, cell rank #6."
+        ),
+        "cluster_5_search_abandonment_and_manual_scrolling": (
+            "79 / 89 users (88.8%) had no workaround; 7 resorted to manual timeline scrolling — Matrix 3."
+        ),
+    }
 
-st.markdown(provenance_html, unsafe_allow_html=True)
+    for idx, cl in enumerate(clusters, 1):
+        cluster_id = cl.get("cluster_id", "")
+        question = CLUSTER_QUESTIONS.get(cluster_id, cl.get("title", "Unknown cluster"))
+        frequency = cl.get("frequency", 0)
+        evidence_badge = get_evidence_badge(frequency)
+        finding_text = CLUSTER_MERGED_FINDINGS.get(
+            cluster_id, cl.get("what_the_data_shows", cl.get("primary_metric", ""))
+        )
+        behavioral_gap = cl.get("behavioral_gap", "")
+        quotes: list[dict] = cl.get("supporting_quotes", [])
+
+        st.markdown(
+            f"""
+            <div class="cluster-card">
+                <div class="cluster-number">Cluster {idx}</div>
+                <div class="cluster-question">{question}</div>
+                <div class="badge-row">
+                    {evidence_badge}
+                    <span class="badge-cluster-n">{frequency} items</span>
+                </div>
+                <div class="cluster-finding">{finding_text}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        with st.expander("Show supporting evidence", expanded=False):
+            if behavioral_gap:
+                st.markdown(
+                    f"**Behavioral Gap:** {behavioral_gap}",
+                )
+                st.markdown("---")
+
+            st.markdown("**Representative Quotes:**")
+            for q in quotes[:3]:
+                source_label = q.get("source", "unknown").replace("_", " ").title()
+                item_id = q.get("item_id", "")
+                quote_text = q.get("quote", "")
+                st.markdown(
+                    f"""
+                    <div class="quote-card">
+                        "{quote_text}"
+                        <div class="quote-meta">
+                            <strong>{source_label}</strong> · ID: <code>{item_id}</code>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+            extra = frequency - 3
+            if extra > 0:
+                st.caption(
+                    f"*+{extra} more items in this cluster — explore them in the Full Data Explorer below.*"
+                )
+
+
+# ===========================================================================
+# TAB 4: SECTION 5 — ASK THE DATA
+# ===========================================================================
+with tab_ask_data:
+    st.markdown(
+        '<div class="section-heading">Ask the data</div>',
+        unsafe_allow_html=True,
+    )
+    st.caption(
+        "Retrieval-augmented synthesis over the 89 verified relevant items in the tagged SQLite corpus. "
+        "All answers are cited with exact item IDs. Powered by **Groq llama-3.3-70b-versatile** (free tier)."
+    )
+
+    # Preset question buttons
+    PRESET_QUESTIONS = [
+        "Why do document and receipt photo searches fail differently from travel photo searches?",
+        "What workarounds do users attempt when Google Photos search fails?",
+        "Which sources report the most search failures and what patterns distinguish them?",
+        "How does rough temporal memory (e.g. 'about 3 years ago') conflict with the way Google Photos organizes photos?",
+        "Why does face and person search fail for users looking for family members?",
+    ]
+
+    st.markdown("**One-click questions:**")
+
+    # Preset question buttons — rendered in 2-column rows with multi-line wrapping
+    for row_start in range(0, len(PRESET_QUESTIONS), 2):
+        pair = PRESET_QUESTIONS[row_start : row_start + 2]
+        cols = st.columns(2)
+        for c_i, q in enumerate(pair):
+            btn_idx = row_start + c_i
+            if cols[c_i].button(q, key=f"preset_btn_{btn_idx}", use_container_width=True):
+                st.session_state["qa_text_input"] = q
+
+    st.markdown(
+        "<div style='font-size:0.92rem;color:#5F6368;margin:14px 0 6px;font-weight:600;'>Or ask your own question:</div>",
+        unsafe_allow_html=True,
+    )
+
+    user_query_input = st.text_input(
+        label="Custom question",
+        label_visibility="collapsed",
+        placeholder="e.g. Why do users who remember a person's face still fail to find the photo?",
+        key="qa_text_input",
+    )
+
+    run_qa = st.button("Generate Cited Research Answer", type="primary")
+
+    if run_qa and user_query_input.strip():
+        with st.spinner("Retrieving relevant feedback and synthesizing cited answer via Groq…"):
+            response = ask_grounded_qa(
+                query=user_query_input.strip(),
+                items=db_items,
+                api_key=effective_api_key,
+                top_k=6,
+            )
+
+        st.markdown(
+            '<div class="answer-box">',
+            unsafe_allow_html=True,
+        )
+        st.markdown(f"**Question:** _{response['query']}_")
+        st.markdown("---")
+        st.markdown(response["answer"])
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        evidence = response.get("evidence", [])
+        with st.expander(f"🔍 Evidence used — {len(evidence)} corpus items retrieved", expanded=False):
+            for ev in evidence:
+                st.markdown(
+                    f"**{ev['citation_label']}** — *{ev['source']}*"
+                    f"{'  ⭐ ' + str(ev['rating']) + '/5' if ev.get('rating') else ''}"
+                )
+                cols = st.columns([1, 1, 1])
+                cols[0].caption(f"Photo type: `{ev['photo_type']}`")
+                cols[1].caption(f"Failure: `{ev['failure_stage']}`")
+                cols[2].caption(f"Workaround: `{ev['workaround']}`")
+                st.markdown(f"> *\"{ev['quote']}\"*")
+                if ev.get("raw_text"):
+                    st.caption(f"Raw text: {ev['raw_text'][:200]}…")
+                st.markdown("---")
+
+    elif run_qa and not user_query_input.strip():
+        st.warning("Please enter a question before generating an answer.")
+
+
+# ===========================================================================
+# TAB 5: SECTION 6 — FULL DATA EXPLORER
+# ===========================================================================
+with tab_explorer:
+    with st.expander("🔍 Explore the Full Dataset", expanded=True):
+        st.markdown(
+            "Browse and filter the complete tagged corpus — including non-relevant items — and explore "
+            "the 4 cross-tabulation matrices."
+        )
+
+        # ── Corpus Browser ──────────────────────────────────────────────────────
+        st.subheader("Raw Reviews Analyser")
+
+        # Filters — fresh query on change (not cached)
+        all_rows = load_all_db_rows()
+        f1, f2, f3 = st.columns([1, 2, 1])
+        with f1:
+            all_sources_raw = sorted({r["source"] for r in all_rows if r.get("source")})
+            source_sel = st.selectbox("Source", ["All"] + all_sources_raw, key="explorer_source")
+        with f2:
+            text_search = st.text_input("Text search (searches raw_text + quote)", key="explorer_text", placeholder="e.g. receipt, face, scroll…")
+        with f3:
+            row_limit = st.selectbox("Show rows", [25, 50, 100, 250, 500], index=1, key="explorer_limit")
+
+        # Apply filters (no cache — triggered by widget state change)
+        filtered = all_rows
+        if source_sel != "All":
+            filtered = [r for r in filtered if r.get("source") == source_sel]
+        if text_search.strip():
+            q_lower = text_search.strip().lower()
+            filtered = [
+                r for r in filtered
+                if q_lower in (r.get("raw_text") or "").lower()
+                or q_lower in (r.get("representative_quote") or "").lower()
+            ]
+
+        st.caption(f"Showing **{min(len(filtered), row_limit)}** of **{len(filtered)}** matching rows (total in DB: {len(all_rows)})")
+
+        if filtered:
+            display_rows = []
+            for r in filtered[:row_limit]:
+                display_rows.append({
+                    "source": r.get("source", ""),
+                    "rating": r.get("rating", ""),
+                    "date": (r.get("date") or "")[:10],
+                    "text": (r.get("raw_text") or "")[:120] + ("…" if len(r.get("raw_text") or "") > 120 else ""),
+                    "is_relevant": "✅" if r.get("is_relevant") else "—",
+                    "photo_type": r.get("photo_type") or "",
+                    "failure_stage": r.get("failure_stage") or "",
+                    "workaround": r.get("workaround") or "",
+                    "quote": (r.get("representative_quote") or "")[:80],
+                })
+            df_explorer = pd.DataFrame(display_rows)
+            st.dataframe(df_explorer, use_container_width=True, height=400)
+        else:
+            st.info("No rows match the current filters.")
+
+        # ── Cross-Tab Matrices ───────────────────────────────────────────────────
+        st.markdown("---")
+        st.subheader("Cross-Tabulation Matrices")
+        st.caption(
+            "4 relational matrices computed across all 89 verified relevant items. "
+            "Select a matrix to view the heatmap and drill down to authentic user quotes."
+        )
+
+        MATRIX_OPTIONS = {
+            "Matrix 1: Failure Stage × Photo Type": "matrix_1_failure_stage_x_photo_type",
+            "Matrix 2: Memory Cues Missing × Photo Type": "matrix_2_memory_cues_missing_x_photo_type",
+            "Matrix 3: Failure Stage × Workaround": "matrix_3_failure_stage_x_workaround",
+            "Matrix 4: Memory Cues Retained × Memory Cues Missing": "matrix_4_memory_cues_retained_x_memory_cues_missing",
+        }
+
+        matrix_choice = st.radio(
+            "Select Matrix:",
+            list(MATRIX_OPTIONS.keys()),
+            horizontal=True,
+            key="matrix_radio",
+        )
+        selected_key = MATRIX_OPTIONS[matrix_choice]
+        m_data = crosstabs.get(selected_key, {})
+
+        if m_data and "grid" in m_data:
+            df_grid = pd.DataFrame.from_dict(m_data["grid"], orient="index")
+            df_grid["TOTAL"] = df_grid.sum(axis=1)
+            totals_row = df_grid.sum(axis=0)
+            totals_row.name = "TOTAL"
+            df_display = pd.concat([df_grid, totals_row.to_frame().T])
+
+            non_total_cols = [c for c in df_grid.columns if c != "TOTAL"]
+            try:
+                styled = df_display.style.background_gradient(
+                    cmap="Blues",
+                    subset=pd.IndexSlice[df_grid.index, non_total_cols],
+                )
+                st.dataframe(styled, use_container_width=True, height=320)
+            except Exception:
+                st.dataframe(df_display, use_container_width=True, height=320)
+
+            # Quote drill-down
+            st.markdown("**Verbatim Quote Drill-Down**")
+            dc1, dc2, dc3 = st.columns(3)
+            with dc1:
+                ds_list = ["All"] + sorted({it["source"] for it in db_items})
+                ds_src = st.selectbox("Filter by Source", ds_list, key="drill_source")
+            with dc2:
+                ds_stage = st.selectbox(
+                    "Filter by Failure Stage",
+                    ["All"] + sorted({it["failure_stage"] for it in db_items}),
+                    key="drill_stage",
+                )
+            with dc3:
+                ds_type = st.selectbox(
+                    "Filter by Photo Type",
+                    ["All"] + sorted({it["photo_type"] for it in db_items}),
+                    key="drill_type",
+                )
+
+            drill_items = [
+                it for it in db_items
+                if (ds_src == "All" or it["source"] == ds_src)
+                and (ds_stage == "All" or it["failure_stage"] == ds_stage)
+                and (ds_type == "All" or it["photo_type"] == ds_type)
+            ]
+            st.caption(f"Showing **{min(len(drill_items), 10)}** of **{len(drill_items)}** matching quotes")
+            for it in drill_items[:10]:
+                rating_str = f" ⭐ {it['rating']}/5" if it.get("rating") else ""
+                date_str = f" · {it['date'][:10]}" if it.get("date") else ""
+                quote_text = it["quote"] if len(it["quote"]) > 10 else (it["raw_text"][:160] + "…")
+                st.markdown(
+                    f"""
+                    <div class="quote-card">
+                        "{quote_text}"
+                        <div class="quote-meta">
+                            <strong>{it['citation_label']}</strong> ({it['source']}){rating_str}{date_str}
+                            &nbsp;|&nbsp; <code>photo_type: {it['photo_type']}</code>
+                            &nbsp;|&nbsp; <code>failure: {it['failure_stage']}</code>
+                            &nbsp;|&nbsp; <code>workaround: {it['workaround']}</code>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+            if len(drill_items) > 10:
+                st.caption(f"*Showing first 10 of {len(drill_items)} matching items.*")
+        else:
+            st.warning("No cross-tabulation data found. Please run `pipeline/aggregate.py` first.")
+
+
+# ===========================================================================
+# TAB 6: SECTION 7 — METHODOLOGY FOOTER
+# ===========================================================================
+with tab_methodology:
+    source_cards_list = []
+    for s in source_breakdown:
+        display_name = s.get("display_name", s.get("source", "")).replace(" Reviews", "")
+        total_coll = s.get("total_collected", 0)
+        total_rel = s.get("total_relevant", 0)
+        rel_rate = s.get("relevance_rate", "—")
+        source_cards_list.append(
+            f'<div class="source-item-card">'
+            f'<div class="source-item-name">{display_name}</div>'
+            f'<div class="source-item-counts">'
+            f'<span><strong>{total_coll:,}</strong> collected</span>'
+            f'<span><strong>{total_rel}</strong> relevant</span>'
+            f'<span class="source-item-rate">{rel_rate}</span>'
+            f'</div>'
+            f'</div>'
+        )
+    source_cards_html = "".join(source_cards_list)
+
+    tagging_model = methodology.get("tagging_model", "Groq llama-3.3-70b-versatile (free tier, JSON mode)")
+    corpus_note = (
+        f"{methodology.get('corpus_size', '—'):,} total items tagged · "
+        f"{methodology.get('relevant_corpus_size', '—')} relevant ({methodology.get('relevance_percentage', '—')})"
+        if isinstance(methodology.get("corpus_size"), int)
+        else "See findings.json for full counts."
+    )
+
+    provenance_html = (
+        '<div class="provenance-card" style="margin-top: 8px;">'
+        '<div class="provenance-title">Corpus Breakdown &amp; Pipeline Provenance</div>'
+        '<div class="provenance-subtitle">Audited distribution of public feedback items collected across 6 primary channels.</div>'
+        f'<div class="source-grid">{source_cards_html}</div>'
+        '<div class="provenance-meta-list">'
+        f'<div class="provenance-meta-row"><strong>Analyzed Corpus</strong><span>{corpus_note}</span></div>'
+        f'<div class="provenance-meta-row"><strong>Tagging Model</strong><span>{tagging_model}</span></div>'
+        '<div class="provenance-meta-row"><strong>Q&amp;A Synthesis Model</strong><span>Groq llama-3.3-70b-versatile via OpenAI-compatible API</span></div>'
+        '<div class="provenance-meta-row"><strong>Pipeline Architecture</strong><span>Collection &rarr; AI Tagging &rarr; SQLite Storage &rarr; Aggregation &rarr; Cluster Derivation &rarr; Interface</span></div>'
+        '</div>'
+
+        '</div>'
+    )
+
+    st.markdown(provenance_html, unsafe_allow_html=True)
+
